@@ -62,15 +62,24 @@ theRegEx <- "-mean\\(\\)|std\\(\\)"
 tidyData1 <- create_tidy_dataset(theRegEx)
 
 ## Creates the first dataset
-write.table(tidyData1, file="./tidyData1.txt")
+# write.table(tidyData1, file="./tidyData1.txt")
 
-## I'm unable to figure out how to average the signals, activities, and features into 
-##      another dataset. Please give me some suggestions.
-newTidyData1 <- tidyData1[, c( 2:length( names( tidyData1 ) ) ) ]
-newTidyData1[, c( 2:length( names( newTidyData1 ) ) )] <- change_from_character_to_numeric( newTidyData1[, c( 2:length( names( newTidyData1 ) ) ) ] )
+## Creates a second, independent tidy data set with the average of each variable for each 
+##      activity and each subject. 
+## Corresponds with project's Part 5.
+tidyData2 <- tidyData1[, c( 2:length( names( tidyData1 ) ) ) ]
+tidyData2[, c( 2:length( names( tidyData2 ) ) )] <- change_from_character_to_numeric( 
+        tidyData2[, c( 2:length( names( tidyData2 ) ) ) ] )
 
-tmp <- newTidyData1[[ names( newTidyData1[2] ) ]]
+tidyData2 <- aggregate( .~activity_labels, data=tidyData2, mean)
 
-library(plyr)
-focusData <- ddply(newTidyData1, .(activity_labels), summarize, 
-                   mean=mean( newTidyData1[ , c( names[2] ) ] ) )
+## Creates the second dataset
+write.table(tidyData2, file="./tidyData2.txt")
+
+
+# 
+# tmp <- newTidyData1[[ names( newTidyData1[2] ) ]]
+# 
+# library(plyr)
+# focusData <- ddply(newTidyData1, .(activity_labels), summarize, 
+#                    mean=mean( newTidyData1[ , c( names[2] ) ] ) )
