@@ -60,15 +60,17 @@ setwd("G:/Downloads/Online Course Coursera - Getting and Cleaning Data/Getting a
 
 theRegEx <- "-mean\\(\\)|std\\(\\)"
 tidyData1 <- create_tidy_dataset(theRegEx)
-newTidyData1 <- tidyData1[, c( 2:length( names( tidyData1 ) ) ) ]
-
-
-newTidyData1[, c( 2:length( names( newTidyData1 ) ) )] <- change_from_character_to_numeric( newTidyData1[, c( 2:length( names( newTidyData1 ) ) ) ] )
-
-# sapply( split( newTidyData1, newTidyData1$activity_labels ), mean)
 
 ## Creates the first dataset
 write.table(tidyData1, file="./tidyData1.txt")
 
 ## I'm unable to figure out how to average the signals, activities, and features into 
 ##      another dataset. Please give me some suggestions.
+newTidyData1 <- tidyData1[, c( 2:length( names( tidyData1 ) ) ) ]
+newTidyData1[, c( 2:length( names( newTidyData1 ) ) )] <- change_from_character_to_numeric( newTidyData1[, c( 2:length( names( newTidyData1 ) ) ) ] )
+
+tmp <- newTidyData1[[ names( newTidyData1[2] ) ]]
+
+library(plyr)
+focusData <- ddply(newTidyData1, .(activity_labels), summarize, 
+                   mean=mean( newTidyData1[ , c( names[2] ) ] ) )
